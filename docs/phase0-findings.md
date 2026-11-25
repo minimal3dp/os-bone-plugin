@@ -1,5 +1,10 @@
 # Phase 0 findings — OrcaSlicer plugin bindings vs. bone infill
 
+> **Platform re-pin:** the bindings and seams below were re-audited against
+> OrcaSlicer 2.5.2 in [platform-2.5.2.md](./platform-2.5.2.md). The findings
+> here remain as written for `v2.5.0-beta` / 2.5.0-rc; read the 2.5.2 file
+> before relying on any version claim.
+
 Written 2026-10-31. Sources are the `v2.5.0-beta` tag of
 `OrcaSlicer/OrcaSlicer` and the four wiki pages listed in the brief. Every
 claim below has a file + line reference or a doc quote; nothing here is
