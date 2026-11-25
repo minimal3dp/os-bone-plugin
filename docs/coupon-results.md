@@ -8,11 +8,12 @@ a defect. Do not fill in an estimate; leave it blank until measured.
 ## Purpose
 
 Decide whether the print-time cost of trabecular infill buys mechanical
-advantage. G-code measurement (`docs/print-cost.md`) shows trabecular costs ~9x
-the extrusion moves of a gyroid control at the same region, with a median
-segment of 0.32 mm against 14.85 mm. That cost is only defensible if the
-structure is meaningfully stronger at matched mass. This record is the only
-thing that can establish that.
+advantage. The measured G-code cost is in `docs/print-cost.md`; the current
+comparison is against a 10% cubic baseline, not gyroid. That cost is only
+defensible if the structure is meaningfully stronger at matched mass. This
+record is the only thing that can establish that.
+
+Open: gyroid control export needed (2.5.2).
 
 ## Coupon design
 
