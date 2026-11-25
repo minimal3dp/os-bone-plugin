@@ -78,10 +78,14 @@ slice below the minimum and observe the GUI error. `quickstart.md` V3, V4, V5.
 
 - [X] T017 [US2] Derive the printable minimum in `src/os_bone_plugin/bone_infill.py` at runtime as `2 * internal_solid_infill_line_width`, never a hardcoded constant. That key is a `FloatOrPercent` over `nozzle_diameter` (NOT over `line_width`); resolve `125%` against the nozzle, and treat `0` as unset and fall back to base `line_width`. Unscale via `orca.slicing.unscale()` rather than assuming `1e6`
 - [X] T018 [US2] Reject an unprintable `strut_thickness_mm` in `src/os_bone_plugin/bone_infill.py` by returning `orca.ExecutionResult.failure(orca.FatalError, msg)` where `msg` names both the supplied value and the minimum (FR-004, FR-004a). Do NOT call `active_step_add_warning()` — it would index `m_state[-1]`
+- [ ] T032 [HUMAN] Install OrcaSlicer 2.5.2, record the build hash from Help > About, and approve or reject the proposed constitution amendment in `docs/platform-2.5.2.md`. This must happen before any 2.5.2 claim.
+- [ ] T033 [HUMAN] Re-run quickstart V1 and V2 on 2.5.2. Put the new exports in `tests/` with the version in the filename. Search both the Python log and the debug log for `Arachne: invalid Voronoi diagram, no toolpaths generated for this outline.` — any hit fails V1.
+- [ ] T034 [HUMAN] Choose `VOID_WIDTH_MM` from the `tools/void_fraction.py` table against a target mass. This must happen before T025.
 - [ ] T019 [US2] Run `specs/001-trabecular-infill/quickstart.md` V3: slice into `tests/` at `solid_infill_direction = 45` and at `= 0`, confirm the void orientation differs between the two exports (SC-007, FR-002a)
 - [ ] T020 [US2] Run `specs/001-trabecular-infill/quickstart.md` V4: force the direction setting absent, confirm three things — slicing completes, structure appears at 45 degrees, and exactly one fallback line appears in the Python log (FR-002b)
 - [ ] T021 [US2] Run `specs/001-trabecular-infill/quickstart.md` V5: set a thickness below `2 * internal_solid_infill_line_width`, confirm a user-visible GUI error naming both values, observed directly rather than inferred from the log (SC-008, FR-004)
 - [ ] T022 [US2] Verify SC-005: slice at two thicknesses and confirm the larger value never yields lower estimated material use; record both estimates in `docs/print-cost.md`
+  - **Not run:** requires GUI slices at two thicknesses. `docs/print-cost.md` has no monotonicity measurement yet.
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -95,6 +99,7 @@ slice below the minimum and observe the GUI error. `quickstart.md` V3, V4, V5.
 a record stating masses, values, and conditions. `quickstart.md` V6, V7.
 
 - [ ] T023 [US3] Run `quickstart.md` V6: run `tools/gcode_metrics.py` against the carved G-code and a gyroid control, and record move count, mean segment length, and travel share for both in `docs/print-cost.md` (SC-006)
+  - **Partial:** `docs/print-cost.md` records `tests/Cube_PLA_1h17m.gcode` against `tests/Cube_PLA_23m33s.gcode`, which is a 10% cubic baseline, not gyroid. Gyroid control is still missing; SC-006 is not yet satisfied.
 - [ ] T024 [US3] Run `quickstart.md` V7: print the 20 mm cube with trabecular infill on a stock profile, photograph the finished part, and record the photo path and profile in `docs/print-cost.md` (SC-003)
 - [ ] T025 [US3] Produce the coupon pair per the Coupon procedure in `specs/001-trabecular-infill/quickstart.md`: slice trabecular and gyroid coupons, iterate the gyroid density, print both, and weigh both to establish matched mass within a stated tolerance (FR-010a)
 - [ ] T026 [US3] Compression test both coupons under identical conditions and record in `docs/coupon-results.md`: measured masses, measured failure load and/or peak stress, coupon dimensions, printer, profile, filament, test method, and the date (SC-004)
@@ -106,10 +111,10 @@ a record stating masses, values, and conditions. `quickstart.md` V6, V7.
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T028 [P] Write `README.md` at repository root: what the plugin does, the target build (OrcaSlicer 2.5.2, build `<TBD>`; measured numbers to date come from 2.5.0-rc build `af2ffb8c`), install steps from `quickstart.md`, the single parameter, and the measured-vs-claimed distinction for any numbers quoted (Principle I, Principle V)
-- [ ] T029 [P] Remove the temporary verification logging added in T004 and T005 from `src/os_bone_plugin/bone_infill.py`, leaving only the production log lines
+- [X] T028 [P] Write `README.md` at repository root: what the plugin does, the target build (OrcaSlicer 2.5.2, build `<TBD>`; measured numbers to date come from 2.5.0-rc build `af2ffb8c`), install steps from `quickstart.md`, the single parameter, and the measured-vs-claimed distinction for any numbers quoted (Principle I, Principle V)
+- [X] T029 [P] Remove the temporary verification logging added in T004 and T005 from `src/os_bone_plugin/bone_infill.py`, leaving only the production log lines. No T004/T005 probe logging remained; only production log lines are present.
 - [ ] T030 Run the full `specs/001-trabecular-infill/quickstart.md` sequence end to end on a clean install and confirm every scenario passes or is explicitly recorded as failing
-- [ ] T031 Review `src/os_bone_plugin/bone_infill.py` for leftover scaffolding: no unused constants, no dead branches, no debug prints outside the `log()` helper
+- [X] T031 Review `src/os_bone_plugin/bone_infill.py` for leftover scaffolding: no unused constants, no dead branches, no debug prints outside the `log()` helper. Removed `is_err()` checks that could never fire on list defaults and one always-true `if before:` wrapper. Kept the probe scripts under `probe/` as historical evidence, the scalar-accessor error handling, and the scaling-factor fallback.
 
 ---
 
@@ -131,6 +136,9 @@ a record stating masses, values, and conditions. `quickstart.md` V6, V7.
 - T011 before T012 before T013 — layout, filter, carve
 - T013 before T015/T016 — no point slicing before replacement works
 - T017 before T018 — the minimum must be derived before it can be enforced
+- T032 before T033 — install 2.5.2 and approve the amendment before re-running on it
+- T033 before any 2.5.2 measurement claim — the 2.5.2 exports do not exist yet
+- T034 before T025 — pick the void width before producing coupons
 - T025 before T026 before T027 — weigh before testing, record after
 
 ### Parallel Opportunities
