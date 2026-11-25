@@ -5,8 +5,9 @@ lives in `tasks.md`.
 
 ## Prerequisites
 
-- OrcaSlicer **2.5.0-rc** at `/Applications/OrcaSlicer 2.app`, build
-  `af2ffb8c`. Not 2.4.2 — no plugin system there.
+- OrcaSlicer **2.5.2** at `/Applications/OrcaSlicer 2.app`, build `<TBD>`
+  (read it from Help > About). Not 2.4.2 — no plugin system there. Exports made
+  before the 2.5.2 re-verification are 2.5.0-rc build `af2ffb8c`.
 - No other OrcaSlicer instance running. Both versions share
   `~/Library/Application Support/OrcaSlicer/`, and the 2.4.2 instance has no
   plugin system.
@@ -30,10 +31,13 @@ plugin unloadable.
 3. Process settings → G-code section → **Slicing Pipeline Plugin** → set to
    empty, then select **Trabecular Infill**.
 
-Step 3's empty-then-select order matters: the preset's derived `plugins`
-manifest is only rebuilt when the picker changes. Selecting an
-already-selected value leaves a stale empty manifest and the capability is
-skipped with `no plugin reference found for capability`.
+On 2.5.2 the empty-then-select order is **no longer required**: PR 16884
+resolves a missing manifest entry by capability name at slice time. The step
+remains harmless. On 2.5.0-rc the order mattered because the derived `plugins`
+manifest was only rebuilt when the picker changed. On 2.5.2 a stale manifest
+logs `missing from the plugins manifest; resolved by name`; the old
+`no plugin reference found for capability` line now means the capability is not
+loaded at all.
 
 ## Verify it ran
 
@@ -53,9 +57,22 @@ The exported G-code must carry both:
 
 ### V1 — structure appears (User Story 1)
 
-Slice the 20 mm cube. Preview shows dense struts separated by voids on interior
-layers. Exported G-code has exactly one interior layer whose extrusion type is
-`Internal solid infill` beyond the native shells.
+Slice the 20 mm cube. Preview shows dense struts separated by voids on every
+interior layer that has a sparse surface. Current behaviour carves **every layer
+with a sparse `stInternal` surface**; the "exactly one interior layer" result
+belonged to the original single-layer spike and is not the shipping behaviour.
+The exported G-code therefore has many, not one, interior layers whose extrusion
+type is `Internal solid infill` beyond the native shells.
+
+Then search the Python log and the debug log for the 2.5.2 skipped-region
+message from `docs/platform-2.5.2.md`:
+
+```
+Arachne: invalid Voronoi diagram, no toolpaths generated for this outline.
+```
+
+Any hit fails V1. A hit means an outline — plausibly a long, thin carved strut —
+was skipped by Arachne while the slice still succeeded.
 
 ### V2 — determinism (SC-002)
 

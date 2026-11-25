@@ -24,6 +24,7 @@ Single project: plugin at `src/os_bone_plugin/bone_infill.py`, helper tools at
 
 - [X] T001 Create `src/os_bone_plugin/bone_infill.py` with the PEP 723 metadata block: `requires-python = ">=3.12"`, `dependencies = []`, and `[tool.orcaslicer.plugin]` with name `Trabecular Infill`, description, author, version `0.1.0`
 - [X] T002 Add module skeleton to `src/os_bone_plugin/bone_infill.py`: `import orca`, a `log()` helper writing to `sys.stderr` with a `[bone_infill]` prefix, and the internal constants `VOID_LENGTH_RATIO = 5.5`, `VOID_WIDTH_RATIO = 1.0`, `LATTICE_JITTER = 0.15`, `SEED = 1234`, `DEFAULT_DIRECTION_DEG = 45.0`
+  - **Changed during round-2 tuning:** the ratio constants were replaced by absolute `VOID_LENGTH_MM = 8.5` and `VOID_WIDTH_MM = 0.6`. Ratios made voids grow with strut thickness until none fitted; see `docs/phase0-findings.md` ("Fragmentation tuning round 2").
 - [X] T003 [P] Create `tools/gcode_metrics.py` as a standalone script per the contract in `specs/001-trabecular-infill/contracts/plugin-interface.md`: per-layer extrusion move count, total extrusion length, mean and median segment length, travel move count and travel share; `--layer N` and `--json` flags; accepts the G-code path as an argument only
 
 ---
@@ -56,6 +57,7 @@ exported G-code. Validate via `quickstart.md` V1 and V2.
 - [X] T009 [US1] Implement direction resolution in `src/os_bone_plugin/bone_infill.py`: read the value proven in T004, apply the rotate template from T005 for the current layer index, fall back to `DEFAULT_DIRECTION_DEG` and log once per capability lifetime when neither yields a value (FR-002a, FR-002b)
 - [X] T010 [US1] Implement sparse-surface selection in `src/os_bone_plugin/bone_infill.py`: for each `LayerRegion`, iterate `fill_surfaces.surfaces` and classify a surface as sparse when `is_internal()` is true and `is_solid()` is false; leave every other surface untouched and in order (FR-005, FR-007)
 - [X] T011 [US1] Implement void layout in `src/os_bone_plugin/bone_infill.py`: tile ribbon rectangles in a lattice rotated into the resolved direction frame, with half-length `strut_thickness_mm * VOID_LENGTH_RATIO * 1e6`, half-width `strut_thickness_mm * VOID_WIDTH_RATIO * 1e6`, spacing derived from the two plus the strut gap, and centres jittered by `LATTICE_JITTER` from `random.Random(SEED)` (FR-001, FR-003)
+  - **Changed during round-2 tuning:** half-length and half-width are now the absolute `VOID_LENGTH_MM` and `VOID_WIDTH_MM`, so the void does not scale with strut thickness. Spacing is `2 * half_len + gap` by `2 * half_w + gap`, with `gap = strut_thickness_mm`. Rationale: ratio-derived voids grew until none fitted (`docs/phase0-findings.md`, "Fragmentation tuning round 2").
 - [X] T012 [US1] Implement interior filtering in `src/os_bone_plugin/bone_infill.py`: discard any void whose corner points are not all `ExPolygon.contains(...)` — build void outlines as plain `(x, y)` tuples because `orca.host.Polygon` is not iterable; construct `orca.host.Polygon` only when building the hole `ExPolygon`
 - [X] T013 [US1] Implement carving and replacement in `src/os_bone_plugin/bone_infill.py`: subtract each kept void with `piece.diff_ex(hole)`, accumulate pieces, and call `LayerRegion.fill_surfaces.set([orca.host.Surface(orca.host.SurfaceType.stInternalSolid, p) for p in pieces] + untouched_surfaces)`; if a layer yields zero pieces, restore the original surfaces rather than blanking the layer (FR-001)
 - [X] T014 [US1] Guard against layers with no sparse surface in `src/os_bone_plugin/bone_infill.py`: return success and skip, performing no `fill_surfaces.set(...)` call (FR-005)
@@ -104,7 +106,7 @@ a record stating masses, values, and conditions. `quickstart.md` V6, V7.
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T028 [P] Write `README.md` at repository root: what the plugin does, the tested build (OrcaSlicer 2.5.0-rc, build `af2ffb8c`), install steps from `quickstart.md`, the single parameter, and the measured-vs-claimed distinction for any numbers quoted (Principle I, Principle V)
+- [ ] T028 [P] Write `README.md` at repository root: what the plugin does, the target build (OrcaSlicer 2.5.2, build `<TBD>`; measured numbers to date come from 2.5.0-rc build `af2ffb8c`), install steps from `quickstart.md`, the single parameter, and the measured-vs-claimed distinction for any numbers quoted (Principle I, Principle V)
 - [ ] T029 [P] Remove the temporary verification logging added in T004 and T005 from `src/os_bone_plugin/bone_infill.py`, leaving only the production log lines
 - [ ] T030 Run the full `specs/001-trabecular-infill/quickstart.md` sequence end to end on a clean install and confirm every scenario passes or is explicitly recorded as failing
 - [ ] T031 Review `src/os_bone_plugin/bone_infill.py` for leftover scaffolding: no unused constants, no dead branches, no debug prints outside the `log()` helper

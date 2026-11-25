@@ -27,11 +27,16 @@ diameter; reading it as a raw number is wrong by a factor of 100.
 
 | Constant | Default | Meaning |
 | --- | --- | --- |
-| `VOID_LENGTH_RATIO` | 5.5 | Void half-length ÷ strut thickness. Sets how elongated each ribbon is. |
-| `VOID_WIDTH_RATIO` | 1.0 | Void half-width ÷ strut thickness. |
+| `VOID_LENGTH_MM` | 8.5 | Half-length of each ribbon void, in millimetres. Absolute, not derived from strut thickness. |
+| `VOID_WIDTH_MM` | 0.6 | Half-width of each ribbon void, in millimetres. Absolute, not derived from strut thickness. |
 | `LATTICE_JITTER` | 0.15 | Fraction of lattice spacing the centre may deviate. |
 | `SEED` | 1234 | Fixed. Changing it changes the structure without changing density. |
 | `DEFAULT_DIRECTION_DEG` | 45.0 | Fallback orientation when the profile supplies none (FR-002b). |
+
+Void size is absolute; `strut_thickness_mm` sets only the gap between voids
+(and therefore density). The earlier ratio form tied void size to strut
+thickness, so raising the strut enlarged the voids until none fitted; round-2
+tuning in `docs/phase0-findings.md` replaced it.
 
 ## Read from the slicing graph (per layer)
 
