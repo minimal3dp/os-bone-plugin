@@ -178,7 +178,7 @@ def ribbon_pts(cx, cy, half_len, half_w, angle_deg):
 
 def bbox_of(exp):
     pts = safe(lambda: exp.contour.points, [])
-    if not pts or is_err(pts):
+    if not pts:
         return None
     xs = [p.x for p in pts]
     ys = [p.y for p in pts]
@@ -380,13 +380,13 @@ class BoneInfill(orca.slicing.SlicingPipelineCapabilityBase):
         gap = thickness_mm * scale
 
         layers = safe(lambda: ctx.object.layers(), [])
-        if not layers or is_err(layers):
+        if not layers:
             return orca.ExecutionResult.success()
 
         carved_layers = 0
         for index, layer in enumerate(layers):
             regions = safe(lambda: layer.regions(), [])
-            if not regions or is_err(regions):
+            if not regions:
                 continue
             if self._carve_layer(ctx, layer, index, half_len, half_w, gap, scale):
                 carved_layers += 1
@@ -399,13 +399,13 @@ class BoneInfill(orca.slicing.SlicingPipelineCapabilityBase):
 
     def _carve_layer(self, ctx, layer, index, half_len, half_w, gap, scale):
         regions = safe(lambda: layer.regions(), [])
-        if not regions or is_err(regions):
+        if not regions:
             return False
 
         changed = False
         for lr in regions:
             surfaces = safe(lambda: lr.fill_surfaces.surfaces, [])
-            if not surfaces or is_err(surfaces):
+            if not surfaces:
                 continue
 
             rng = random.Random(SEED + index)
@@ -444,11 +444,10 @@ class BoneInfill(orca.slicing.SlicingPipelineCapabilityBase):
                 return False
             changed = True
 
-            if before:
-                mm2 = (1.0 / scale) ** 2
-                log("layer %d: %.1f -> %.1f mm2 (%.0f%% void) at %.0f deg"
-                    % (index, before * mm2, after * mm2,
-                       100.0 * (1.0 - after / before), resolve_direction(ctx, index)))
+            mm2 = (1.0 / scale) ** 2
+            log("layer %d: %.1f -> %.1f mm2 (%.0f%% void) at %.0f deg"
+                % (index, before * mm2, after * mm2,
+                   100.0 * (1.0 - after / before), resolve_direction(ctx, index)))
 
         return changed
 

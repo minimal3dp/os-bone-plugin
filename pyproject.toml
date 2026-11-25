@@ -1,16 +1,13 @@
 [project]
 name = "os-bone-plugin"
 version = "0.1.0"
-description = "Add your description here"
+description = "OrcaSlicer slicing-pipeline plugin that carves a seeded trabecular (bone-like) strut network into sparse infill regions."
 readme = "README.md"
 authors = [
     { name = "Mike Wilson", email = "wilsongis@gmail.com" }
 ]
 requires-python = ">=3.12"
 dependencies = []
-
-[project.scripts]
-os-bone-plugin = "os_bone_plugin:main"
 
 [build-system]
 requires = ["uv_build>=0.13.6,<0.14.0"]
