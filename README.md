@@ -17,7 +17,7 @@ built-in pattern.
 
 ## Target build
 
-- Target: OrcaSlicer **2.5.2**, build `<TBD>` (read it from Help > About).
+- Target: OrcaSlicer **2.5.2**, build `f92a7c06`.
 - The bindings were re-audited against 2.5.2 in
   [`docs/platform-2.5.2.md`](docs/platform-2.5.2.md).
 - Measured numbers to date come from OrcaSlicer **2.5.0-rc** build `af2ffb8c`.

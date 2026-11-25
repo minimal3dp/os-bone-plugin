@@ -8,8 +8,9 @@ Method: `git ls-remote --tags https://github.com/OrcaSlicer/OrcaSlicer.git`
 followed by raw-file fetch at each tag and `diff -u`. Tags compared:
 `v2.5.0-beta` (`345efec64c7b95a05ce5cf96df0dde66a158835c`),
 `v2.5.0-rc` (`af2ffb8cddd2f3c0bdadc56d9cc3945fb23577ea`), and
-`v2.5.2` (`f92a7c065c5718b8ef1baac1cd704df2911238f4`). The 2.5.2 **build
-hash is TBD**: the human must read it from Help > About after installing.
+`v2.5.2` (`f92a7c065c5718b8ef1baac1cd704df2911238f4`). The installed 2.5.2
+build hash is **`f92a7c06`** (Help > About, recorded 2026-11-24), which matches
+the `v2.5.2` tag commit.
 
 ## File-level diff, 2.5.0-rc -> 2.5.2
 
@@ -166,7 +167,7 @@ loaded.
 
 Do **not** apply this here. It is a draft for the project owner to ratify after
 installing 2.5.2 and reading the build hash from Help > About. Replace
-`<TBD>` with that hash.
+`<TBD>` with that hash. **Recorded 2026-11-24: `f92a7c06`** (Help > About), matching the `v2.5.2` tag commit above.
 
 Affected principle: **V. Pinned Platform Version** (PATCH: a version and build
 reference change, no principle redefinition).
@@ -178,7 +179,7 @@ reference change, no principle redefinition).
 -- Tested build: OrcaSlicer **2.5.0-rc** at `/Applications/OrcaSlicer 2.app`,
 -  build `af2ffb8c`, macOS. This is the only supported target for the MVP.
 +- Tested build: OrcaSlicer **2.5.2** at `/Applications/OrcaSlicer 2.app`,
-+  build `<TBD>`, macOS. This is the only supported target for the MVP.
++  build `f92a7c06`, macOS. This is the only supported target for the MVP.
 +  Exports dated before the 2.5.2 re-verification come from 2.5.0-rc build
 +  `af2ffb8c`; any measured number taken from them MUST keep that label.
 @@

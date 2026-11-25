@@ -5,7 +5,7 @@ lives in `tasks.md`.
 
 ## Prerequisites
 
-- OrcaSlicer **2.5.2** at `/Applications/OrcaSlicer 2.app`, build `<TBD>`
+- OrcaSlicer **2.5.2** at `/Applications/OrcaSlicer 2.app`, build `f92a7c06`
   (read it from Help > About). Not 2.4.2 — no plugin system there. Exports made
   before the 2.5.2 re-verification are 2.5.0-rc build `af2ffb8c`.
 - No other OrcaSlicer instance running. Both versions share

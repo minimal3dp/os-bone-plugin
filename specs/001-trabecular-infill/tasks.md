@@ -111,7 +111,7 @@ a record stating masses, values, and conditions. `quickstart.md` V6, V7.
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [X] T028 [P] Write `README.md` at repository root: what the plugin does, the target build (OrcaSlicer 2.5.2, build `<TBD>`; measured numbers to date come from 2.5.0-rc build `af2ffb8c`), install steps from `quickstart.md`, the single parameter, and the measured-vs-claimed distinction for any numbers quoted (Principle I, Principle V)
+- [X] T028 [P] Write `README.md` at repository root: what the plugin does, the target build (OrcaSlicer 2.5.2, build `f92a7c06`; measured numbers to date come from 2.5.0-rc build `af2ffb8c`), install steps from `quickstart.md`, the single parameter, and the measured-vs-claimed distinction for any numbers quoted (Principle I, Principle V)
 - [X] T029 [P] Remove the temporary verification logging added in T004 and T005 from `src/os_bone_plugin/bone_infill.py`, leaving only the production log lines. No T004/T005 probe logging remained; only production log lines are present.
 - [ ] T030 Run the full `specs/001-trabecular-infill/quickstart.md` sequence end to end on a clean install and confirm every scenario passes or is explicitly recorded as failing
 - [X] T031 Review `src/os_bone_plugin/bone_infill.py` for leftover scaffolding: no unused constants, no dead branches, no debug prints outside the `log()` helper. Removed `is_err()` checks that could never fire on list defaults and one always-true `if before:` wrapper. Kept the probe scripts under `probe/` as historical evidence, the scalar-accessor error handling, and the scaling-factor fallback.
